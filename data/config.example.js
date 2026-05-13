@@ -2,15 +2,15 @@
 // Do NOT commit data/config.js — it is listed in .gitignore.
 
 const FIREBASE_CONFIG = {
-  apiKey: "YOUR_FIREBASE_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.firebasestorage.app",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID",
-  measurementId: "YOUR_MEASUREMENT_ID"
+  apiKey: "AIzaSyAwVsFk9rAY2qOF4l4Vv8ZAB1vLQAyrYto",
+  authDomain: "resumebuilder-29fb6.firebaseapp.com",
+  projectId: "resumebuilder-29fb6",
+  storageBucket: "resumebuilder-29fb6.firebasestorage.app",
+  messagingSenderId: "390513760054",
+  appId: "1:390513760054:web:19e9e675ebebb4a3e70597",
+  measurementId: "G-98HGL8WLHG"
 };
 
-const GROQ_API_KEY = "YOUR_GROQ_API_KEY";
+const GROQ_API_KEY = "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";
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const GROQ_MODEL = "llama-3.3-70b-versatile";
