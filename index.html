@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEXUS RESUME — AI Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div id="toast-container"></div>
+
+  <div id="app">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+        </div>
+        <div class="sidebar-logo-text">NEX<span>US</span></div>
+      </div>
+
+      <div class="sidebar-user">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <div class="user-info">
+          <div class="user-name" id="userName">Loading...</div>
+          <div class="user-status">ONLINE</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
+        <div class="nav-item active" data-page="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>Dashboard</span>
+        </div>
+        <div class="nav-item" data-page="resumes">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span>My Resumes</span>
+          <span class="nav-badge" id="resumeCountBadge">0</span>
+        </div>
+        <div class="nav-item" data-page="builder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <span>Builder</span>
+        </div>
+
+        <div class="nav-section-label">AI Tools</div>
+        <div class="nav-item" data-page="ai">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <span>AI Features</span>
+        </div>
+        <div class="nav-item" data-page="jobs">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+          <span>Job Matcher</span>
+        </div>
+
+        <div class="nav-section-label">Insights</div>
+        <div class="nav-item" data-page="analytics">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <span>Analytics</span>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="btn-logout" onclick="AppAuth.logout()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          LOGOUT
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main-content">
+      <div class="topbar">
+        <div class="topbar-title" id="topbarTitle">DASHBOARD</div>
+        <div class="topbar-actions">
+          <div class="topbar-time" id="topbarTime"></div>
+          <button class="btn btn-cyan btn-sm" onclick="App.navigate('builder')" id="newResumeBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            NEW RESUME
+          </button>
+        </div>
+      </div>
+
+      <div class="page-content">
+        <!-- DASHBOARD PAGE -->
+        <div id="page-dashboard" class="page active">
+          <div class="stat-grid">
+            <div class="stat-card cyan">
+              <div class="stat-label">Total Resumes</div>
+              <div class="stat-value" id="dash-total">0</div>
+              <div class="stat-sub">Saved to cloud</div>
+            </div>
+            <div class="stat-card purple">
+              <div class="stat-label">Avg ATS Score</div>
+              <div class="stat-value" id="dash-ats">—</div>
+              <div class="stat-sub">AI evaluated</div>
+            </div>
+            <div class="stat-card pink">
+              <div class="stat-label">Downloads</div>
+              <div class="stat-value" id="dash-downloads">0</div>
+              <div class="stat-sub">PDF exports</div>
+            </div>
+            <div class="stat-card green">
+              <div class="stat-label">AI Assists</div>
+              <div class="stat-value" id="dash-assists">0</div>
+              <div class="stat-sub">Suggestions used</div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+            <div class="card card-corner">
+              <div class="card-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                RECENT ACTIVITY
+              </div>
+              <div id="recentActivity">
+                <div class="empty-state" style="padding:20px">
+                  <p style="font-size:12px">No activity yet. Create your first resume!</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="card card-corner">
+              <div class="card-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                QUICK ACTIONS
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <button class="btn btn-cyan w-full" onclick="App.navigate('builder'); ResumeBuilder.newResume()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  CREATE NEW RESUME
+                </button>
+                <button class="btn btn-purple w-full" onclick="App.navigate('ai')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42"/></svg>
+                  AI ASSIST TOOLS
+                </button>
+                <button class="btn btn-pink w-full" onclick="App.navigate('jobs')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/></svg>
+                  MATCH JOBS
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card-corner">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              MY RESUMES
+            </div>
+            <div id="dashResumeList">
+              <div class="empty-state" style="padding:20px">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                <p>No resumes yet</p>
+                <button class="btn btn-cyan" onclick="App.navigate('builder'); ResumeBuilder.newResume()">Create First Resume</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MY RESUMES PAGE -->
+        <div id="page-resumes" class="page">
+          <div class="section-header">
+            <div class="section-title">MY <span class="accent">RESUMES</span></div>
+            <button class="btn btn-cyan" onclick="App.navigate('builder'); ResumeBuilder.newResume()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              NEW RESUME
+            </button>
+          </div>
+          <div id="resumeList" class="resume-list">
+            <div class="empty-state" style="grid-column:1/-1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              <p>No resumes found. Create your first one!</p>
+              <button class="btn btn-cyan" onclick="App.navigate('builder'); ResumeBuilder.newResume()">Get Started</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- BUILDER PAGE -->
+        <div id="page-builder" class="page">
+          <div class="section-header" style="margin-bottom:14px">
+            <div class="section-title">RESUME <span class="accent">BUILDER</span></div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text2)" id="builderSaveStatus">Not saved</span>
+              <button class="btn btn-purple btn-sm" onclick="ResumeBuilder.saveResume()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+                SAVE
+              </button>
+              <button class="btn btn-cyan btn-sm" onclick="PdfExport.download()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                EXPORT PDF
+              </button>
+              <button class="btn btn-sm" style="border-color:rgba(0,229,255,0.3);color:var(--text2)" onclick="ResumeBuilder.getAtsScore()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/></svg>
+                ATS SCORE
+              </button>
+            </div>
+          </div>
+
+          <div class="builder-layout">
+            <!-- FORM PANEL -->
+            <div class="builder-form-panel" id="builderFormPanel">
+              <!-- Personal Info -->
+              <div class="accordion">
+                <div class="accordion-header open" onclick="toggleAccordion(this)">
+                  <span>01 — PERSONAL INFO</span>
+                  <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="accordion-body open">
+                  <div class="form-row">
+                    <div class="form-col">
+                      <label class="form-label">Full Name</label>
+                      <input type="text" class="form-input" id="f-name" placeholder="John Doe" oninput="ResumeBuilder.update()" />
+                    </div>
+                    <div class="form-col">
+                      <label class="form-label">Job Title</label>
+                      <input type="text" class="form-input" id="f-title" placeholder="Software Engineer" oninput="ResumeBuilder.update()" />
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-col">
+                      <label class="form-label">Email</label>
+                      <input type="email" class="form-input" id="f-email" placeholder="john@example.com" oninput="ResumeBuilder.update()" />
+                    </div>
+                    <div class="form-col">
+                      <label class="form-label">Phone</label>
+                      <input type="text" class="form-input" id="f-phone" placeholder="+1 555 000 0000" oninput="ResumeBuilder.update()" />
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-col">
+                      <label class="form-label">Location</label>
+                      <input type="text" class="form-input" id="f-location" placeholder="San Francisco, CA" oninput="ResumeBuilder.update()" />
+                    </div>
+                    <div class="form-col">
+                      <label class="form-label">LinkedIn</label>
+                      <input type="text" class="form-input" id="f-linkedin" placeholder="linkedin.com/in/..." oninput="ResumeBuilder.update()" />
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-col">
+                      <label class="form-label">GitHub</label>
+                      <input type="text" class="form-input" id="f-github" placeholder="github.com/..." oninput="ResumeBuilder.update()" />
+                    </div>
+                    <div class="form-col">
+                      <label class="form-label">Website</label>
+                      <input type="text" class="form-input" id="f-website" placeholder="mysite.com" oninput="ResumeBuilder.update()" />
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <label class="form-label">Professional Summary</label>
+                    <textarea class="form-textarea" id="f-summary" placeholder="Brief professional summary..." oninput="ResumeBuilder.update()" style="min-height:80px"></textarea>
+                    <button class="btn btn-purple btn-sm" style="margin-top:6px;align-self:flex-start" onclick="AIFeatures.generateSummary()">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><circle cx="12" cy="12" r="3"/></svg>
+                      AI GENERATE
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Experience -->
+              <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                  <span>02 — EXPERIENCE</span>
+                  <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="accordion-body">
+                  <div id="expList"></div>
+                  <button class="btn-add" onclick="ResumeBuilder.addExperience()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    ADD EXPERIENCE
+                  </button>
+                </div>
+              </div>
+
+              <!-- Education -->
+              <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                  <span>03 — EDUCATION</span>
+                  <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="accordion-body">
+                  <div id="eduList"></div>
+                  <button class="btn-add" onclick="ResumeBuilder.addEducation()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    ADD EDUCATION
+                  </button>
+                </div>
+              </div>
+
+              <!-- Skills -->
+              <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                  <span>04 — SKILLS</span>
+                  <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="accordion-body">
+                  <div class="form-col mb-12">
+                    <label class="form-label">Technical Skills</label>
+                    <div class="tag-input-wrapper" id="techSkillsWrapper" onclick="document.getElementById('techSkillInput').focus()">
+                      <input type="text" class="tag-input" id="techSkillInput" placeholder="Type and press Enter..." onkeydown="ResumeBuilder.addSkill('tech', event)" />
+                    </div>
+                  </div>
+                  <div class="form-col mb-12">
+                    <label class="form-label">Soft Skills</label>
+                    <div class="tag-input-wrapper" id="softSkillsWrapper" onclick="document.getElementById('softSkillInput').focus()">
+                      <input type="text" class="tag-input" id="softSkillInput" placeholder="Type and press Enter..." onkeydown="ResumeBuilder.addSkill('soft', event)" />
+                    </div>
+                  </div>
+                  <div class="form-col mb-12">
+                    <label class="form-label">Languages</label>
+                    <div class="tag-input-wrapper" id="langSkillsWrapper" onclick="document.getElementById('langSkillInput').focus()">
+                      <input type="text" class="tag-input" id="langSkillInput" placeholder="Type and press Enter..." onkeydown="ResumeBuilder.addSkill('lang', event)" />
+                    </div>
+                  </div>
+                  <button class="btn btn-purple btn-sm" onclick="AIFeatures.suggestSkills()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><circle cx="12" cy="12" r="3"/></svg>
+                    AI SUGGEST SKILLS
+                  </button>
+                </div>
+              </div>
+
+              <!-- Projects -->
+              <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                  <span>05 — PROJECTS</span>
+                  <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="accordion-body">
+                  <div id="projList"></div>
+                  <button class="btn-add" onclick="ResumeBuilder.addProject()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    ADD PROJECT
+                  </button>
+                </div>
+              </div>
+
+              <!-- Certifications -->
+              <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                  <span>06 — CERTIFICATIONS</span>
+                  <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="accordion-body">
+                  <div id="certList"></div>
+                  <button class="btn-add" onclick="ResumeBuilder.addCert()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    ADD CERTIFICATION
+                  </button>
+                </div>
+              </div>
+
+              <!-- ATS Meter -->
+              <div class="ats-meter">
+                <div class="ats-meter-header">
+                  <div>
+                    <div class="ats-score-label">ATS COMPATIBILITY SCORE</div>
+                    <div class="ats-score-value" id="atsScoreDisplay">—</div>
+                  </div>
+                  <button class="btn btn-sm" style="border-color:rgba(0,229,255,0.3);color:var(--cyan)" onclick="ResumeBuilder.getAtsScore()">ANALYZE</button>
+                </div>
+                <div class="ats-bar-track">
+                  <div class="ats-bar-fill" id="atsBarFill" style="width:0%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PREVIEW PANEL -->
+            <div class="builder-preview-panel">
+              <div class="preview-toolbar">
+                <span class="preview-toolbar-title">LIVE PREVIEW</span>
+                <div class="template-tabs">
+                  <button class="template-tab active" onclick="ResumeBuilder.setTemplate('modern', this)">Modern</button>
+                  <button class="template-tab" onclick="ResumeBuilder.setTemplate('minimal', this)">Minimal</button>
+                  <button class="template-tab" onclick="ResumeBuilder.setTemplate('executive', this)">Executive</button>
+                  <button class="template-tab" onclick="ResumeBuilder.setTemplate('creative', this)">Creative</button>
+                  <button class="template-tab" onclick="ResumeBuilder.setTemplate('twocol', this)">Two-Col</button>
+                  <button class="template-tab" onclick="ResumeBuilder.setTemplate('tech', this)">Tech</button>
+                </div>
+              </div>
+              <div class="resume-preview-content" id="resumePreview">
+                <div style="padding:40px;text-align:center;color:var(--text2);font-family:'Space Mono',monospace;font-size:12px">
+                  <div style="margin-bottom:12px;opacity:0.4">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="48" height="48" style="display:block;margin:0 auto 12px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  </div>
+                  Start filling in your info to see the live preview
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI FEATURES PAGE -->
+        <div id="page-ai" class="page">
+          <div class="section-header">
+            <div class="section-title">AI <span class="accent">FEATURES</span></div>
+          </div>
+
+          <div style="background:rgba(0,229,255,0.05);border:1px solid var(--border);border-radius:2px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text2);letter-spacing:1px">All AI tools use your resume data from the Builder. Fill in your resume first for accurate, context-based results.</span>
+          </div>
+
+          <div class="ai-grid">
+
+            <!-- ① BULLET REWRITER -->
+            <div class="ai-card">
+              <div class="ai-card-header">
+                <div class="ai-card-icon cyan">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                </div>
+                <div>
+                  <div class="ai-card-name">BULLET REWRITER</div>
+                  <div style="font-size:11px;color:var(--text2);margin-top:2px">Enhance any bullet point</div>
+                </div>
+              </div>
+              <div class="ai-card-desc">Paste a weak bullet — get a stronger PAR-structured version using only your actual words, no invented facts.</div>
+              <textarea class="form-textarea" id="bulletInput" placeholder="e.g. Was team lead and helped with deployments..." style="min-height:65px"></textarea>
+              <div class="ai-output empty" id="bulletOutput">Rewritten bullet will appear here...</div>
+              <div class="ai-output-actions">
+                <button class="btn btn-cyan" style="flex:1" onclick="AIFeatures.rewriteBullet()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                  REWRITE
+                </button>
+                <button class="btn-copy-sm" onclick="AIFeatures.copyOutput('bulletOutput')">COPY</button>
+              </div>
+            </div>
+
+            <!-- ② BULLET GENERATOR -->
+            <div class="ai-card">
+              <div class="ai-card-header">
+                <div class="ai-card-icon cyan">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                </div>
+                <div>
+                  <div class="ai-card-name">BULLET GENERATOR</div>
+                  <div style="font-size:11px;color:var(--text2);margin-top:2px">3 options from any activity</div>
+                </div>
+              </div>
+              <div class="ai-card-desc">Describe what you did — get 3 different strong bullet point options. Great when you don't know where to start.</div>
+              <div class="form-row" style="margin-bottom:0">
+                <div class="form-col">
+                  <input class="form-input" id="genBulletRole" placeholder="Your role (e.g. Team Lead)" />
+                </div>
+                <div class="form-col">
+                  <input class="form-input" id="genBulletCompany" placeholder="Company (optional)" />
+                </div>
+              </div>
+              <textarea class="form-textarea" id="genBulletDesc" placeholder="What did you do? e.g. Managed deployments and led team of 4 developers..." style="min-height:60px"></textarea>
+              <div class="ai-output-rich" id="genBulletOutput" style="min-height:60px;color:var(--text2);font-style:italic;font-size:12px">3 bullet options will appear here...</div>
+              <button class="btn btn-cyan" onclick="AIFeatures.generateBullets()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                GENERATE 3 OPTIONS
+              </button>
+            </div>
+
+            <!-- ③ SUMMARY GENERATOR -->
+            <div class="ai-card">
+              <div class="ai-card-header">
+                <div class="ai-card-icon purple">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <div>
+                  <div class="ai-card-name">SUMMARY WRITER</div>
+                  <div style="font-size:11px;color:var(--text2);margin-top:2px">Based on your actual profile</div>
+                </div>
+              </div>
+              <div class="ai-card-desc">Generates or improves your professional summary using only your real experience and target role — no generic filler.</div>
+              <input type="text" class="form-input" id="summaryJobInput" placeholder="Target job title (e.g. Senior AI Engineer)" />
+              <div class="ai-output empty" id="summaryOutput">Generated summary will appear here...</div>
+              <div class="ai-output-actions">
+                <button class="btn btn-purple" style="flex:1" onclick="AIFeatures.generateSummaryStandalone()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2"/></svg>
+                  GENERATE
+                </button>
+                <button class="btn-copy-sm" onclick="AIFeatures.copyOutput('summaryOutput')">COPY</button>
+                <button class="btn-push-sm" onclick="AIFeatures.pushSummaryToResume()">PUSH TO RESUME</button>
+              </div>
+            </div>
+
+            <!-- ④ COVER LETTER -->
+            <div class="ai-card">
+              <div class="ai-card-header">
+                <div class="ai-card-icon pink">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </div>
+                <div>
+                  <div class="ai-card-name">COVER LETTER</div>
+                  <div style="font-size:11px;color:var(--text2);margin-top:2px">Tailored to the job description</div>
+                </div>
+              </div>
+              <div class="ai-card-desc">Paste any job description — get a 3-paragraph cover letter written specifically for you using your resume data.</div>
+              <textarea class="form-textarea" id="coverJobDesc" placeholder="Paste the full job description here..." style="min-height:80px"></textarea>
+              <div class="ai-output empty" id="coverOutput" style="max-height:220px;overflow-y:auto">Cover letter will appear here...</div>
+              <div class="ai-output-actions">
+                <button class="btn btn-pink" style="flex:1" onclick="AIFeatures.generateCoverLetter()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M4 4h16c1.1 0 2 .9 2 2v12"/></svg>
+                  GENERATE
+                </button>
+                <button class="btn-copy-sm" onclick="AIFeatures.copyOutput('coverOutput')">COPY</button>
+              </div>
+            </div>
+
+            <!-- ⑤ COLD EMAIL WRITER -->
+            <div class="ai-card">
+              <div class="ai-card-header">
+                <div class="ai-card-icon cyan">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </div>
+                <div>
+                  <div class="ai-card-name">COLD EMAIL</div>
+                  <div style="font-size:11px;color:var(--text2);margin-top:2px">Referral &amp; outreach emails</div>
+                </div>
+              </div>
+              <div class="ai-card-desc">Write a short, direct cold outreach email to a company using your actual background — no generic opener.</div>
+              <div class="form-row" style="margin-bottom:0">
+                <div class="form-col">
+                  <input class="form-input" id="coldCompany" placeholder="Company name *" />
+                </div>
+                <div class="form-col">
+                  <input class="form-input" id="coldContact" placeholder="Contact name (optional)" />
+                </div>
+              </div>
+              <input class="form-input" id="coldPurpose" placeholder="Purpose: e.g. Apply for ML Engineer role" />
+              <div class="ai-output empty" id="coldOutput" style="max-height:200px;overflow-y:auto">Email body will appear here...</div>
+              <div class="ai-output-actions">
+                <button class="btn btn-cyan" style="flex:1" onclick="AIFeatures.generateColdEmail()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                  WRITE EMAIL
+                </button>
+                <button class="btn-copy-sm" onclick="AIFeatures.copyOutput('coldOutput')">COPY</button>
+              </div>
+            </div>
+
+            <!-- ⑥ LINKEDIN CONTENT -->
+            <div class="ai-card">
+              <div class="ai-card-header">
+                <div class="ai-card-icon purple">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                </div>
+                <div>
+                  <div class="ai-card-name">LINKEDIN CONTENT</div>
+                  <div style="font-size:11px;color:var(--text2);margin-top:2px">Headline + About section</div>
+                </div>
+              </div>
+              <div class="ai-card-desc">Generates an optimized LinkedIn headline and About section from your resume data — factual, no buzzword fluff.</div>
+              <div class="ai-output-rich" id="linkedinOutput" style="min-height:80px;color:var(--text2);font-style:italic;font-size:12px">Headline and About section will appear here...</div>
+              <button class="btn btn-purple" onclick="AIFeatures.generateLinkedin()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/></svg>
+                GENERATE LINKEDIN CONTENT
+              </button>
+            </div>
+
+            <!-- ⑦ SALARY ESTIMATOR -->
+            <div class="ai-card">
+              <div class="ai-card-header">
+                <div class="ai-card-icon green">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                <div>
+                  <div class="ai-card-name">SALARY ESTIMATOR</div>
+                  <div style="font-size:11px;color:var(--text2);margin-top:2px">Market range + negotiation tips</div>
+                </div>
+              </div>
+              <div class="ai-card-desc">Get a realistic salary range for your role, location, and experience level — with specific negotiation tips.</div>
+              <div class="ai-output-rich" id="salaryOutput" style="min-height:80px;color:var(--text2);font-style:italic;font-size:12px">Salary estimate will appear here...</div>
+              <button class="btn" style="border-color:var(--green);color:var(--green)" onclick="AIFeatures.estimateSalary()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                ESTIMATE SALARY
+              </button>
+            </div>
+
+            <!-- ⑧ ATS ANALYZER — full width -->
+            <div class="ai-card ai-card-full">
+              <div class="ai-card-header">
+                <div class="ai-card-icon green">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <div>
+                  <div class="ai-card-name">ATS ANALYZER</div>
+                  <div style="font-size:11px;color:var(--text2);margin-top:2px">Structured score · keyword gaps · action items</div>
+                </div>
+              </div>
+              <div class="ai-card-desc">Paste a job description to get a structured ATS score, matched vs missing keywords as visual chips, per-section scores, and prioritized fixes.</div>
+              <textarea class="form-textarea" id="atsJobDesc" placeholder="Paste the target job description here..." style="min-height:80px"></textarea>
+              <div class="ai-output-rich" id="atsOutput" style="min-height:80px;color:var(--text2);font-style:italic;font-size:12px">ATS analysis will appear here...</div>
+              <button class="btn" style="border-color:var(--green);color:var(--green)" onclick="AIFeatures.analyzeAts()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/></svg>
+                ANALYZE ATS FIT
+              </button>
+            </div>
+
+            <!-- ⑨ SKILLS GAP ANALYZER — full width -->
+            <div class="ai-card ai-card-full">
+              <div class="ai-card-header">
+                <div class="ai-card-icon pink">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                </div>
+                <div>
+                  <div class="ai-card-name">SKILLS GAP ANALYZER</div>
+                  <div style="font-size:11px;color:var(--text2);margin-top:2px">You have · Missing · What to learn</div>
+                </div>
+              </div>
+              <div class="ai-card-desc">Compare your resume skills against a job description. See exactly what you have, what's missing, and the top 3 skills to learn with specific resources.</div>
+              <textarea class="form-textarea" id="gapJobDesc" placeholder="Paste the job description here..." style="min-height:80px"></textarea>
+              <div class="ai-output-rich" id="gapOutput" style="min-height:80px;color:var(--text2);font-style:italic;font-size:12px">Skills gap analysis will appear here...</div>
+              <button class="btn btn-pink" onclick="AIFeatures.analyzeSkillsGap()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                ANALYZE SKILLS GAP
+              </button>
+            </div>
+
+            <!-- ⑩ INTERVIEW PREP — full width -->
+            <div class="ai-card ai-card-full">
+              <div class="ai-card-header">
+                <div class="ai-card-icon purple">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <div>
+                  <div class="ai-card-name">INTERVIEW PREP</div>
+                  <div style="font-size:11px;color:var(--text2);margin-top:2px">6 questions · STAR answers from your experience</div>
+                </div>
+              </div>
+              <div class="ai-card-desc">Paste a job description — get 6 likely interview questions for that specific role with STAR-format answer frameworks built from YOUR actual experience, not generic examples.</div>
+              <textarea class="form-textarea" id="interviewJobDesc" placeholder="Paste the job description here..." style="min-height:80px"></textarea>
+              <div class="ai-output-rich" id="interviewOutput" style="min-height:80px;color:var(--text2);font-style:italic;font-size:12px">Interview questions will appear here...</div>
+              <button class="btn btn-purple" onclick="AIFeatures.generateInterviewPrep()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                GENERATE INTERVIEW PREP
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- JOB MATCHER PAGE -->
+        <div id="page-jobs" class="page">
+          <div class="section-header">
+            <div class="section-title">JOB <span class="accent">MATCHER</span></div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 320px;gap:20px">
+            <div>
+              <div class="card card-corner mb-16">
+                <div class="card-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  FIND MATCHING JOBS
+                </div>
+                <div class="form-row">
+                  <div class="form-col">
+                    <label class="form-label">Job Title / Keywords</label>
+                    <input type="text" class="form-input" id="jobSearchTitle" placeholder="Software Engineer, Product Manager..." />
+                  </div>
+                  <div class="form-col">
+                    <label class="form-label">Location</label>
+                    <input type="text" class="form-input" id="jobSearchLocation" placeholder="Remote, New York..." />
+                  </div>
+                </div>
+                <textarea class="form-textarea mb-12" id="jobSearchContext" placeholder="Additional context: your skills, experience level, industry preferences..." style="min-height:70px"></textarea>
+                <button class="btn btn-cyan" onclick="JobMatcher.findJobs()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  FIND & MATCH JOBS
+                </button>
+              </div>
+
+              <div id="jobResults" class="job-list">
+                <div class="empty-state">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                  <p>Search for jobs to see AI-matched recommendations</p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="card card-corner" style="position:sticky;top:0">
+                <div class="card-title">SKILLS MATCH</div>
+                <div id="skillsMatchPanel" style="color:var(--text2);font-size:12px">
+                  Run a job search to see how your skills match
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ANALYTICS PAGE -->
+        <div id="page-analytics" class="page">
+          <div class="section-header">
+            <div class="section-title">ANALYTICS <span class="accent">DASHBOARD</span></div>
+          </div>
+
+          <div class="stat-grid mb-20">
+            <div class="stat-card cyan">
+              <div class="stat-label">Best ATS Score</div>
+              <div class="stat-value" id="an-best">—</div>
+              <div class="stat-sub">All time high</div>
+            </div>
+            <div class="stat-card purple">
+              <div class="stat-label">Avg Score</div>
+              <div class="stat-value" id="an-avg">—</div>
+              <div class="stat-sub">Across resumes</div>
+            </div>
+            <div class="stat-card pink">
+              <div class="stat-label">Total Downloads</div>
+              <div class="stat-value" id="an-dl">0</div>
+              <div class="stat-sub">PDF exports</div>
+            </div>
+            <div class="stat-card green">
+              <div class="stat-label">AI Uses</div>
+              <div class="stat-value" id="an-ai">0</div>
+              <div class="stat-sub">Feature invocations</div>
+            </div>
+          </div>
+
+          <div class="analytics-grid">
+            <div class="card card-corner">
+              <div class="card-title">ATS SCORE HISTORY</div>
+              <div class="chart-container">
+                <canvas id="scoreChart"></canvas>
+              </div>
+            </div>
+            <div class="card card-corner">
+              <div class="card-title">ACTIVITY BREAKDOWN</div>
+              <div class="chart-container">
+                <canvas id="activityChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card-corner" style="margin-top:16px">
+            <div class="card-title">RESUME PERFORMANCE</div>
+            <div id="resumePerformanceTable">
+              <div class="empty-state" style="padding:20px">
+                <p>Create and score resumes to see performance data</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- html2pdf -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <!-- App scripts -->
+  <script src="data/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/firestore.js"></script>
+  <script src="js/gemini.js"></script>
+  <script src="js/resumeBuilder.js"></script>
+  <script src="js/aiFeatures.js"></script>
+  <script src="js/jobMatcher.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/pdfExport.js"></script>
+</body>
+</html>
