@@ -11,6 +11,6 @@ const FIREBASE_CONFIG = {
   measurementId: "G-98HGL8WLHG"
 };
 
-const GROQ_API_KEY = "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";
+const GROQ_API_KEY = "YOUR_GROQ_API_KEY";
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const GROQ_MODEL = "llama-3.3-70b-versatile";
